@@ -14,7 +14,7 @@ const nodeFile = ".js";
 const nodeFolder = "node";
 const globString = "../src/**/*.md";
 const asyncPrefix = "(async () => {\n";
-const asyncSuffix = "})();";
+const asyncSuffix = "})().catch((err) => { console.error(err); });";
 
 function* yieldLines(lines, prefix, suffix) {
   let inCodeBlock = false;
