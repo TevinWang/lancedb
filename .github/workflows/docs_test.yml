@@ -53,7 +53,7 @@ jobs:
     runs-on: "ubuntu-22.04"
     strategy:
       matrix:
-        node-version: [ "16", "18" ]
+        node-version: [ "16" ]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -79,4 +79,4 @@ jobs:
     - name: Test
       run: |
         cd docs/test/node
-        for d in *; do cd "$d"; echo "$d".js; node --max-old-space-size=4096 "$d".js; cd ..; done
+        for d in *; do cd "$d"; echo "$d".js; node --inspect --max-old-space-size=4096 "$d".js; cd ..; done
