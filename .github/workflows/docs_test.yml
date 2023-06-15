@@ -22,7 +22,6 @@ jobs:
     runs-on: "ubuntu-22.04"
     strategy:
       matrix:
-        node-version: [ "16", "18" ]
         python-minor-version: [ "8", "9", "10", "11" ]
     steps:
     - name: Checkout
@@ -33,15 +32,37 @@ jobs:
         python-version: 3.${{ matrix.python-minor-version }}
         cache: "pip"
         cache-dependency-path: "docs/test/requirements.txt"
-    - uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: docs/test/package-lock.json
     - name: Build Python
       working-directory: docs/test
       run:
         python -m pip install -r requirements.txt
+    - name: Create test files
+      run: |
+        cd docs/test
+        python md_testing.py
+    - name: Run setup files
+      run: |
+        cd docs/test/python
+        for d in *; do cd "$d"; if test -f "$d"-setup.py; then python "$d"-setup.py || exit 1; fi; cd ..; done
+    - name: Test
+      run: |
+        cd docs/test/python
+        for d in *; do cd "$d"; python "$d".py || exit 1; cd ..; done
+  test-node:
+    name: Test doc nodejs code
+    runs-on: "ubuntu-22.04"
+    strategy:
+      matrix:
+        node-version: [ "16", "18" ]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: docs/test/package-lock.json
     - name: Install node dependencies
       run: |
         cd docs/test
@@ -49,20 +70,12 @@ jobs:
     - name: Create test files
       run: |
         cd docs/test
-        python md_testing.py
-    - name: Run python setup files
-      run: |
-        cd docs/test/python
-        for d in *; do cd "$d"; if test -f "$d"-setup.py; then python "$d"-setup.py || exit 1; fi; cd ..; done
-    - name: Test python
-      run: |
-        cd docs/test/python
-        for d in *; do cd "$d"; python "$d".py || exit 1; cd ..; done
-    - name: Run node setup files
+        node md_testing.js
+    - name: Run setup files
       run: |
         cd docs/test/node
         for d in *; do cd "$d"; if test -f "$d"-setup.js; then node "$d"-setup.js || exit 1; fi; cd ..; done
-    - name: Test node
+    - name: Test
       run: |
         cd docs/test/node
         for d in *; do cd "$d"; node "$d".js || exit 1; cd ..; done
