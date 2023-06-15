@@ -57,8 +57,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
     - name: Set up Node
       uses: actions/setup-node@v3
       with:
@@ -82,3 +80,5 @@ jobs:
       run: |
         cd docs/test/node
         for d in *; do cd "$d"; echo "$d".js; node --inspect --max-old-space-size=4096 "$d".js; cd ..; done
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
