@@ -19,7 +19,7 @@ on:
 jobs:
   test-python:
     name: Test doc python code
-    runs-on: "ubuntu-22.04"
+    runs-on: "macos-13"
     strategy:
       matrix:
         python-minor-version: [ "8", "9", "10", "11" ]
