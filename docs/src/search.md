@@ -47,7 +47,7 @@ import numpy as np
 
 db = lancedb.connect("data/sample-lancedb")
 
-tbl = db.open_table("my_vectors")
+tbl = db.open_table("my_vector")
 
 df_1 = tbl.search(np.random.random((1536))) \
     .limit(10) \
