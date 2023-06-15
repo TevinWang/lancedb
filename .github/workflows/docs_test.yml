@@ -73,6 +73,7 @@ jobs:
         node md_testing.js
     - name: Run setup files
       run: |
+        ulimit -c unlimited
         cd docs/test/node
         for d in *; do cd "$d"; if test -f "$d"-setup.js; then echo "$d"-setup.js; node "$d"-setup.js; fi; cd ..; done
     - name: Test
