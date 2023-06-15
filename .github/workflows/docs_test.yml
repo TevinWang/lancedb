@@ -65,6 +65,7 @@ jobs:
         cache-dependency-path: docs/test/package-lock.json
     - name: Install node dependencies
       run: |
+        sudo apt install -y protobuf-compiler libssl-dev
         cd docs/test
         npm ci
     - name: Create test files
