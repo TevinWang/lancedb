@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - docs/test/**
+      - docs/**
       - .github/workflows/docs_test.yml
   pull_request:
     paths:
-      - docs/test/**
+      - docs/**
       - .github/workflows/docs_test.yml
 
   # Allows you to run this workflow manually from the Actions tab
