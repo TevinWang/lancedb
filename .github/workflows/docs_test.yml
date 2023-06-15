@@ -53,7 +53,7 @@ jobs:
     runs-on: "ubuntu-22.04"
     strategy:
       matrix:
-        node-version: [ "16" ]
+        node-version: [ "16", "18" ]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -67,19 +67,17 @@ jobs:
       run: |
         cd docs/test
         npm ci
+        sudo apt install -y protobuf-compiler libssl-dev
     - name: Create test files
       run: |
         cd docs/test
         node md_testing.js
     - name: Run setup files
       run: |
-        ulimit -c unlimited
+      
         cd docs/test/node
-        for d in *; do cd "$d"; if test -f "$d"-setup.js; then echo "$d"-setup.js; node "$d"-setup.js; fi; cd ..; done
+        for d in *; do cd "$d"; if test -f "$d"-setup.js; then echo "$d"-setup.js; node --max-old-space-size=4096 "$d"-setup.js; fi; cd ..; done
     - name: Test
       run: |
         cd docs/test/node
-        for d in *; do cd "$d"; echo "$d".js; node --inspect --max-old-space-size=4096 "$d".js; cd ..; done
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
+        for d in *; do cd "$d"; echo "$d".js; node --max-old-space-size=4096 --inspect "$d".js; cd ..; done
