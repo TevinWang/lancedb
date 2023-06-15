@@ -47,7 +47,7 @@ import numpy as np
 
 db = lancedb.connect("data/sample-lancedb")
 
-tbl = db.open_table("my_vector")
+tbl = db.open_table("my_vectors")
 
 df_1 = tbl.search(np.random.random((1536))) \
     .limit(10) \
@@ -70,7 +70,7 @@ await db.createTable('my_vectors', data)
 const vectordb = require('vectordb')
 const db = await vectordb.connect('data/sample-lancedb')
 
-const tbl = await db.openTable("my_vector")
+const tbl = await db.openTable("my_vectors")
 
 const results_1 = await tbl.search(Array(1536).fill(1.2))
     .limit(20)
