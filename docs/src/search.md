@@ -70,7 +70,7 @@ await db.createTable('my_vectors', data)
 const vectordb = require('vectordb')
 const db = await vectordb.connect('data/sample-lancedb')
 
-const tbl = await db.openTable("my_vectors")
+const tbl = await db.openTable("my_vector")
 
 const results_1 = await tbl.search(Array(1536).fill(1.2))
     .limit(20)
