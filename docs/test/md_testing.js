@@ -13,6 +13,8 @@ const nodePrefix = "javascript";
 const nodeFile = ".js";
 const nodeFolder = "node";
 const globString = "../src/**/*.md";
+const asyncPrefix = "(async () => {\n";
+const asyncSuffix = "})();";
 
 function* yieldLines(lines, prefix, suffix) {
   let inCodeBlock = false;
@@ -46,7 +48,7 @@ function createCodeFiles(prefix, suffix, fileEnding = "") {
       const outPath = path.join(nodeFolder, fileName, `${fileName}${fileExtension}`);
       console.log(outPath)
       fs.mkdirSync(path.dirname(outPath), { recursive: true });
-      fs.writeFileSync(outPath, lines.join("\n"));
+      fs.writeFileSync(outPath, asyncPrefix + "\n" + lines.join("\n") + asyncSuffix);
     }
   }
 }
