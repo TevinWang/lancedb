@@ -1,83 +1,53 @@
-name: Documentation Code Testing
+name: Deploy docs to Pages
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - docs/**
-      - .github/workflows/docs_test.yml
-  pull_request:
-    paths:
-      - docs/**
-      - .github/workflows/docs_test.yml
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  test-python:
-    name: Test doc python code
-    runs-on: "ubuntu-22.04"
-    strategy:
-      matrix:
-        python-minor-version: [ "8", "9", "10", "11" ]
+  # Single deploy job since we're just deploying
+  build:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: "macos-13"
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.${{ matrix.python-minor-version }}
-        cache: "pip"
-        cache-dependency-path: "docs/test/requirements.txt"
-    - name: Build Python
-      working-directory: docs/test
-      run:
-        python -m pip install -r requirements.txt
-    - name: Create test files
-      run: |
-        cd docs/test
-        python md_testing.py
-    - name: Run setup files
-      run: |
-        cd docs/test/python
-        for d in *; do cd "$d"; if test -f "$d"-setup.py; then echo "$d"-setup.py; python "$d"-setup.py; fi; cd ..; done
-    - name: Test
-      run: |
-        cd docs/test/python
-        for d in *; do cd "$d"; echo "$d".py; python "$d".py; cd ..; done
-  test-node:
-    name: Test doc nodejs code
-    runs-on: "ubuntu-22.04"
-    strategy:
-      matrix:
-        node-version: [ "16", "18" ]
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Set up Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: docs/test/package-lock.json
-    - name: Install node dependencies
-      run: |
-        cd docs/test
-        npm ci
-        sudo apt install -y protobuf-compiler libssl-dev
-    - name: Create test files
-      run: |
-        cd docs/test
-        node md_testing.js
-    - name: Run setup files
-      run: |
-      
-        cd docs/test/node
-        for d in *; do cd "$d"; if test -f "$d"-setup.js; then echo "$d"-setup.js; node --max-old-space-size=4096 "$d"-setup.js; fi; cd ..; done
-    - name: Test
-      run: |
-        cd docs/test/node
-        for d in *; do cd "$d"; echo "$d".js; node --max-old-space-size=4096 --inspect "$d".js; cd ..; done
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+          cache-dependency-path: "docs/requirements.txt"
+      - name: Build Python
+        working-directory: python
+        run: |
+          python -m pip install -e .
+          python -m pip install -r ../docs/requirements.txt
+      - name: Build docs
+        run: |
+          PYTHONPATH=. mkdocs build -f docs/mkdocs.yml
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "docs/site"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
