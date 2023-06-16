@@ -66,7 +66,7 @@ jobs:
         cache: 'npm'
         cache-dependency-path: docs/test/package-lock.json
     - name: Install dependecies needed for ubuntu
-      if: ${{ matrix.os }} == 'ubuntu-22.04'
+      if: ${{ matrix.os == 'ubuntu-22.04' }}
       run: |
         sudo apt install -y protobuf-compiler libssl-dev
     - name: Install node dependencies
