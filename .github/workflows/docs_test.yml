@@ -85,3 +85,6 @@ jobs:
       run: |
         cd docs/test/node
         for d in *; do cd "$d"; echo "$d".js; node --max-old-space-size=4096 "$d".js; cd ..; done
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
