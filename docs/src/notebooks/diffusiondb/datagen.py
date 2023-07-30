@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 #
 #  Copyright 2023 LanceDB Developers
@@ -13,8 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-"""Dataset hf://poloclub/diffusiondb
-"""
+"""Dataset hf://poloclub/diffusiondb"""
 
 import io
 from argparse import ArgumentParser
@@ -71,21 +71,22 @@ def generate_clip_embeddings(batch) -> pa.RecordBatch:
     return batch
 
 
-def datagen(args):
-    """Generate DiffusionDB dataset, and use CLIP model to generate image embeddings."""
-    dataset = load_dataset("poloclub/diffusiondb", args.subset)
-    data = []
-    for b in dataset.map(
-        generate_clip_embeddings, batched=True, batch_size=256, remove_columns=["image"]
-    )["train"]:
-        b["image"] = b["image_bytes"]
-        del b["image_bytes"]
-        data.append(b)
-    tbl = pa.Table.from_pylist(data, schema=schema)
-    return tbl
+# Use init check to make script/module more flexible
+if __name__ == "__main__":
 
+    def datagen(args):
+        """Generate DiffusionDB dataset, and use CLIP model to generate image embeddings."""
+        dataset = load_dataset("poloclub/diffusiondb", args.subset)
+        data = []
+        for b in dataset.map(
+            generate_clip_embeddings, batched=True, batch_size=256, remove_columns=["image"]
+        )["train"]:
+            b["image"] = b["image_bytes"]
+            del b["image_bytes"]
+            data.append(b)
+        tbl = pa.Table.from_pylist(data, schema=schema)
+        return tbl
 
-def main():
     parser = ArgumentParser()
     parser.add_argument(
         "-o", "--output", metavar="DIR", help="Output lance directory", required=True
@@ -103,6 +104,3 @@ def main():
     batches = datagen(args)
     lance.write_dataset(batches, args.output)
 
-
-if __name__ == "__main__":
-    main()
