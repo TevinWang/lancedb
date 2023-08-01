@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -171,14 +172,14 @@ class Contextualizer:
         min_window_size: int
             The min_window_size.
         """
-        self._min_window_size = min_window_size
-        return self
 
     def to_df(self) -> pd.DataFrame:
         """Create the context windows and return a DataFrame."""
-
+        
+        # Validate required fields
         if self._text_col not in self._raw_df.columns.tolist():
             raise MissingColumnError(self._text_col)
+
 
         if self._window is None or self._window < 1:
             raise MissingValueError(
@@ -194,14 +195,15 @@ class Contextualizer:
 
         def process_group(grp):
             # For each group, create the text rolling window
-            # with values of size >= min_window_size
-            text = grp[self._text_col].values
-            contexts = grp.iloc[:: self._stride, :].copy()
-            windows = [
-                " ".join(text[start_i : min(start_i + self._window, len(grp))])
-                for start_i in range(0, len(grp), self._stride)
-                if start_i + self._window <= len(grp)
                 or len(grp) - start_i >= self._min_window_size
+            ]
+            # if last few rows dropped
+            # Optimize by preallocating contexts list
+            contexts = [None] * len(range(0, len(grp), self._stride))
+            
+            if len(windows) < len(contexts):
+                contexts = contexts.iloc[: len(windows)]
+            contexts[self._text_col] = windows
             ]
             # if last few rows dropped
             if len(windows) < len(contexts):
@@ -215,3 +217,4 @@ class Contextualizer:
         return pd.concat(
             [process_group(grp) for _, grp in self._raw_df.groupby(self._groupby)]
         )
+
