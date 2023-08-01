@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,5 +22,9 @@ VEC = Union[list, np.ndarray, pa.Array, pa.ChunkedArray]
 URI = Union[str, Path]
 
 # TODO support generator
+
+# TODO support generator
 DATA = Union[List[dict], dict, pd.DataFrame]
+
+# Make the column name a constant to avoid hardcoding
 VECTOR_COLUMN_NAME = "vector"
