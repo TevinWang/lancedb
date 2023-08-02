@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -6,12 +7,28 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+"""
+Common Types and Constants
+
+This internal module defines common types and constants used across 
+LanceDB. Key contents:
+
+- URI - The uri type
+- DATA - Supported data types 
+- VEC - Vector types
+- VECTOR_COLUMN_NAME - Name of vector column
+
+Keeping these in a shared location avoids duplication and ensures
+consistency across components. The types also help annotate
+method signatures.
+"""
+
 from pathlib import Path
 from typing import List, Union
+
 
 import numpy as np
 import pandas as pd
@@ -23,3 +40,4 @@ URI = Union[str, Path]
 # TODO support generator
 DATA = Union[List[dict], dict, pd.DataFrame]
 VECTOR_COLUMN_NAME = "vector"
+
