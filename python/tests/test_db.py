@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +15,24 @@
 import pandas as pd
 import pytest
 
+import pytest
+
 import lancedb
+"""
+LanceDBConnection Tests
+
+Tests methods on the LanceDBConnection class to manage a database.
+
+Covers:
+
+- Connecting to an in-memory database
+- Creating, querying, and deleting tables
+- Converting between DataFrames and LanceDB tables  
+
+"""
 
 
 def test_basic(tmp_path):
-    db = lancedb.connect(tmp_path)
-
     assert db.uri == str(tmp_path)
     assert db.table_names() == []
 
@@ -120,3 +133,4 @@ def test_delete_table(tmp_path):
 
     db.create_table("test", data=data)
     assert db.table_names() == ["test"]
+
