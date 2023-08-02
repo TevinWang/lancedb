@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +17,25 @@ import numpy as np
 import pandas as pd
 import pandas.testing as tm
 import pyarrow as pa
+import pandas.testing as tm
+import pyarrow as pa
 import pytest
+
+"""
+Query Tests
+
+Tests the query builder interfaces.
+
+Focuses on: 
+
+- Filtering
+- Projection 
+- Metrics
+- Pandas integration
+"""
 from lancedb.query import LanceQueryBuilder
 
 
-class MockTable:
-    def __init__(self, tmp_path):
         self.uri = tmp_path
 
     def to_lance(self):
@@ -72,3 +86,4 @@ def test_query_builder_with_metric(table):
 
 def cosine_distance(vec1, vec2):
     return 1 - np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+
