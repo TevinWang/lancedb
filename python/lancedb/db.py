@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -10,6 +11,9 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
+import logging
+import time
 
 from __future__ import annotations
 
@@ -26,10 +30,12 @@ from .util import get_uri_scheme, get_uri_location
 
 
 class LanceDBConnection:
+    # Add logger
+    logger = logging.getLogger(__name__)
+
     """
     A connection to a LanceDB database.
 
-    Parameters
     ----------
     uri: str or Path
         The root uri of the database.
@@ -55,12 +61,15 @@ class LanceDBConnection:
     >>> db.drop_table("another_table")
     """
 
+    limitations under the License.
+    """
+
+    # Log connection
+    logger.info("Created LanceDBConnection to %s", uri)
+
     def __init__(self, uri: URI):
         is_local = isinstance(uri, Path) or get_uri_scheme(uri) == "file"
         if is_local:
-            if isinstance(uri, str):
-                uri = Path(uri)
-            uri = uri.expanduser().absolute()
             Path(uri).mkdir(parents=True, exist_ok=True)
         self._uri = str(uri)
 
@@ -225,10 +234,12 @@ class LanceDBConnection:
         """Drop a table from the database.
 
         Parameters
-        ----------
-        name: str
-            The name of the table.
         """
         filesystem, path = pa.fs.FileSystem.from_uri(self.uri)
         table_path = os.path.join(path, name + ".lance")
+        start = time.time()
         filesystem.delete_dir(table_path)
+        self.logger.info("Dropped table %s in %0.3f seconds", name, time.time() - start)
+
+        filesystem.delete_dir(table_path)
+
