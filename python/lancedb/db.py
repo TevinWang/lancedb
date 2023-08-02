@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -10,12 +11,39 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-from __future__ import annotations
-
 import os
-from pathlib import Path
-import os
+
+import pyarrow as pa
+"""
+LanceDB Database Access
+
+Implements the LanceDBConnection class which manages access to a LanceDB
+database. This handles:
+
+- Connecting to the database
+- Listing, creating, and deleting tables
+- Abstracts storage so LanceDB can be used with different systems
+
+LanceDBConnection takes a uri parameter pointing to the database location.
+This can be a local path or a URI for an object store like S3.
+
+Key methods:
+
+- table_names() - List tables
+- create_table() - Create a table
+- drop_table() - Delete a table 
+- open_table() - Open a table for querying
+
+The database itself is essentially just a directory that contains Arrow 
+files representing tables. Methods here handle connecting to the file
+system/object store and managing the directory structure.
+
+See the Python API docs for full reference.
+"""
+
+from pyarrow import fs
+
+from .common import DATA, URI
 
 import pyarrow as pa
 from pyarrow import fs
@@ -232,3 +260,4 @@ class LanceDBConnection:
         filesystem, path = pa.fs.FileSystem.from_uri(self.uri)
         table_path = os.path.join(path, name + ".lance")
         filesystem.delete_dir(table_path)
+
