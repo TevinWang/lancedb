@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import logging
+
 from .db import URI, LanceDBConnection
 
 
@@ -20,15 +23,16 @@ def connect(uri: URI) -> LanceDBConnection:
     Parameters
     ----------
     uri: str or Path
-        The uri of the database.
+      http://www.apache.org/licenses/LICENSE-2.0
 
-    Examples
-    --------
+    Unless required by applicable law or agreed to in writing, software
+    # Add logging to help with debugging
+    logger = logging.getLogger(__name__)
+    logger.info("Connecting to LanceDB at %s", uri)
 
-    For a local directory, provide a path for the database:
-
-    >>> import lancedb
-    >>> db = lancedb.connect("~/.lancedb")
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
 
     For object storage, use a URI prefix:
 
@@ -40,3 +44,4 @@ def connect(uri: URI) -> LanceDBConnection:
         A connection to a LanceDB database.
     """
     return LanceDBConnection(uri)
+
