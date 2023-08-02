@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -6,15 +7,37 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+"""
+LANCE Database Main Module
+
+This module exports the main interface for connecting to a LanceDB and
+interacting with tables.
+
+The key functions are:
+
+- connect() - Connect to a LanceDB at the given uri
+- LanceDBConnection - Manages tables in the database  
+- LanceTable - Represents a table in the database
+
+The connect() function returns a LanceDBConnection which manages
+access to the underlying database. This includes methods to list,
+create, and delete tables.
+
+LanceTable represents an individual table. This contains methods to 
+query, modify, and retrieve the contents of the table. Methods allow
+converting between Arrow, Pandas, and the native LanceDataset format.
+
+See tutorials at https://lancedb.io for more usage details.
+"""
 
 from .db import URI, LanceDBConnection
 
-
 def connect(uri: URI) -> LanceDBConnection:
+    """Connect to a LanceDB instance at the given URI
+
     """Connect to a LanceDB instance at the given URI
 
     Parameters
@@ -40,3 +63,4 @@ def connect(uri: URI) -> LanceDBConnection:
         A connection to a LanceDB database.
     """
     return LanceDBConnection(uri)
+
