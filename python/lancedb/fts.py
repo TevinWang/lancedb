@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -6,14 +7,46 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+"""
+Full Text Search
+
+This module provides full text search integration with tantivy.
+
+It implements two main functions:
+
+- create_index() - Create a new tantivy Index
+- populate_index() - Populate an index from a LanceTable
+- search_index() - Search an index
+
+To use:
+
+1. Create an index with create_index(), providing the index path and 
+   fields to index 
+
+2. Populate the index by calling populate_index() and passing your
+   table and the field name(s) to index  
+
+3. Search the index with search_index()
+
+This can also be done directly from a LanceTable using:
+
+- create_fts_index() - Create and populate tantivy index
+- search() - Search by passing a query string instead of vector
+
+See the full text search tutorial for examples.
+
+Requires tantivy-py - install with:
+
+pip install tantivy@git+https://github.com/quickwit-oss/tantivy-py
+"""
 
 """Full text search index using tantivy-py"""
 import os
-from typing import List, Tuple
+
+import pyarrow as pa
 
 import pyarrow as pa
 
@@ -133,3 +166,4 @@ def search_index(
             ]
         )
     )
+
