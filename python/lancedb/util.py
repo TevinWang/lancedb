@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -6,12 +7,31 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+"""
+Uri Utility Functions
+
+This internal module contains utility functions for working with uris.
+
+Two key functions:
+
+- get_uri_scheme - Get just the scheme from a uri 
+- get_uri_location - Get the location ignoring the scheme
+
+These handle ambiguities in uri parsing like:
+
+- Missing schemes
+- Short schemes that look like Windows paths 
+- Normalizing s3 uris
+
+Used to abstract handling uris consistenty across storage systems.
+"""
 
 from urllib.parse import ParseResult, urlparse
+
+from pyarrow import fs
 
 from pyarrow import fs
 
@@ -61,3 +81,4 @@ def get_uri_location(uri: str) -> str:
         return parsed.path
     else:
         return parsed.netloc + parsed.path
+

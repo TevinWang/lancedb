@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -7,13 +8,22 @@
 #
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
 
 from lancedb.util import get_uri_scheme
 
 
+"""
+URI Util Tests
+
+Covers the uri utility module.
+
+Focuses on:
+
+- Scheme parsing for different uri types
+"""
+def test_normalize_uri():
+    uris = [
+        "relative/path",
 def test_normalize_uri():
     uris = [
         "relative/path",
@@ -28,3 +38,4 @@ def test_normalize_uri():
     for uri, expected_scheme in zip(uris, schemes):
         parsed_scheme = get_uri_scheme(uri)
         assert parsed_scheme == expected_scheme
+

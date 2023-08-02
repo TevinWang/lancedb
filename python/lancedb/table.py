@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -10,12 +11,48 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+from typing import List, Union
 
-from __future__ import annotations
+import lance
+"""
+LanceDB Table Access
 
-import os
-import shutil
-from functools import cached_property
+Implements the LanceTable class which provides access to a table within
+a LanceDB database.
+
+This handles:
+
+- Creating tables
+- Adding data 
+- Querying
+- Deleting tables
+- Listing available versions
+- Checking out previous versions
+
+A table is represented as a directory containing Arrow IPC files. Methods
+here handle manipulating the table directory.
+
+Key functionality:
+
+- Creating tables from various data types like DataFrames
+- Adding rows in different formats 
+- Querying with vector or full text search  
+- Converting between Pandas, Arrow, and LanceDataset
+- Fetching table metadata like schema
+
+Plus utilities like versioning. 
+
+Lower level methods convert between user friendly pandas/Arrow and the
+native LanceDataset format. But top level methods like .add() and .query()
+handle this transparently.
+
+See the Python API docs for full reference.
+"""
+
+
+import numpy as np
+import pandas as pd
+import pyarrow as pa
 from typing import List, Union
 
 import lance
@@ -345,3 +382,4 @@ def _sanitize_vector_column(data: pa.Table, vector_column_name: str) -> pa.Table
     return data.set_column(
         data.column_names.index(vector_column_name), vector_column_name, vec_arr
     )
+

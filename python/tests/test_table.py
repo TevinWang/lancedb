@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +13,28 @@
 #  limitations under the License.
 
 from pathlib import Path
-
 import pandas as pd
 import pyarrow as pa
 import pytest
+
+"""
+LanceTable Tests
+
+Comprehensive tests for LanceTable methods including:
+
+- Creating tables
+- Inserting data
+- Querying 
+- Versioning
+
+Uses a tmp directory to simulate a real LanceDB database.
+"""
 from lancedb.table import LanceTable
 
 
 class MockDB:
+    def __init__(self, uri: Path):
+        self.uri = uri
     def __init__(self, uri: Path):
         self.uri = uri
 
@@ -136,3 +151,4 @@ def test_versioning(db):
     table.checkout(1)
     assert table.version == 1
     assert len(table) == 2
+

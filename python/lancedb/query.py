@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -6,13 +7,55 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+"""
+Query Builder
+
+The LanceQueryBuilder makes it easy to construct SQL-like queries for
+nearest neighbor search.
+
+Build queries by chaining methods like:
+
+```python
+results = table.search(query_vector)
+  .limit(10)
+  .where("height > 40") 
+  .select(["name", "age"])
+  .to_df() 
+```
+
+Internally this creates the JSON query payload needed to 
+search a Lance index.
+
+Attributes like:
+  
+- limit - Maximum results
+- where - Filter clause   
+- select - Columns to return
+- metric - Distance metric
+
+Are converted to the corresponding options in the Lance query JSON.
+
+The .to_df() method executes the query and returns results as a
+Pandas DataFrame.
+
+LanceFtsQueryBuilder subclasses this for full text search queries 
+where a query string is passed instead of a vector.
+
+See the Querying tutorial for more.
+"""
+
 from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+import pyarrow as pa
+
 from typing import Literal
 
+import numpy as np
 import numpy as np
 import pandas as pd
 import pyarrow as pa
@@ -207,3 +250,4 @@ class LanceFtsQueryBuilder(LanceQueryBuilder):
         output_tbl = self._table.to_lance().take(row_ids, columns=self._columns)
         output_tbl = output_tbl.append_column("score", scores)
         return output_tbl.to_pandas()
+
