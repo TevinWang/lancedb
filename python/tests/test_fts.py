@@ -1,3 +1,4 @@
+
 # Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +16,25 @@ import random
 
 import lancedb.fts
 import numpy as np
+import numpy as np
 import pandas as pd
 import pytest
+"""
+Full Text Search Tests
+
+Exercises the full text search integration.
+
+Checks:
+  
+- Creating indexes
+- Populating from table
+- Queries
+- Integration with LanceTable
+
+"""
 import tantivy
 
 import lancedb as ldb
-
 
 @pytest.fixture
 def table(tmp_path) -> ldb.table.LanceTable:
@@ -89,3 +103,4 @@ def test_empty_rs(tmp_path, table, mocker):
     mocker.patch("lancedb.fts.search_index", return_value=([], []))
     df = table.search("puppy").limit(10).to_df()
     assert len(df) == 0
+

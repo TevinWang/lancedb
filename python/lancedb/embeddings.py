@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -6,14 +7,41 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 #  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+"""
+Generate Embeddings
+
+The with_embeddings() function generates vector embeddings for text in a 
+table.
+
+This allows easily adding a vector column to a PyArrow Table/Pandas DataFrame 
+given a function that can embed text into vectors.
+
+The function is wrapped to provide:
+
+- Retry on failure
+- Rate limiting
+- Progress bar
+- Batching
+
+So with_embeddings() handles wrapping any embedding API for robustness
+and performance.
+
+Under the hood, the EmbeddingFunction class handles the wrapping and
+vector column addition. But with_embeddings() provides a simple
+high level API.
+
+See the Embeddings tutorial for example usage.
+"""
 
 import math
 import sys
-from typing import Callable, Union
+
+import numpy as np
+import pandas as pd
+import pyarrow as pa
 
 import numpy as np
 import pandas as pd
@@ -144,3 +172,4 @@ class EmbeddingFunction:
             yield from tqdm(_chunker(arr), total=math.ceil(length / self._batch_size))
         else:
             yield from _chunker(arr)
+

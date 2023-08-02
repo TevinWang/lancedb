@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,12 +14,22 @@
 
 import os
 import pytest
+import os
+import pytest
 
+"""
+I/O Tests
+
+Tests LanceDB integrated with different storage systems.
+
+Currently just tests:
+
+- Queries against S3
+
+"""
 import lancedb
 
 # You need to setup AWS credentials an a base path to run this test. Example
-#    AWS_PROFILE=default TEST_S3_BASE_URL=s3://my_bucket/dataset pytest tests/test_io.py
-
 
 @pytest.mark.skipif(
     (os.environ.get("TEST_S3_BASE_URL") is None),
@@ -48,3 +59,4 @@ def test_s3_io():
     assert len(db) == 1
 
     assert db.open_table("test").name == db["test"].name
+

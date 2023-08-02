@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -8,12 +9,31 @@
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS,
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
-from __future__ import annotations
 
+from __future__ import annotations
 import pandas as pd
+"""
+Context Window Creation
+
+The contextualize() function creates a Contextualizer for generating
+rolling context windows over text data.
+
+This is useful for passing sliding windows of text rather than 
+individual tokens/words to large language models.
+
+Key attributes:
+
+- window - Size of window
+- stride - Steps between windows  
+- text_col - Text column to window
+- groupby - Group rows (don't cross groups)
+- min_window_size - Discard small final windows
+
+See the context windows tutorial for examples. 
+"""
 from .exceptions import MissingValueError, MissingColumnError
+
+
 
 
 def contextualize(raw_df: pd.DataFrame) -> Contextualizer:
@@ -215,3 +235,4 @@ class Contextualizer:
         return pd.concat(
             [process_group(grp) for _, grp in self._raw_df.groupby(self._groupby)]
         )
+

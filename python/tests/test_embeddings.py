@@ -1,3 +1,4 @@
+
 #  Copyright 2023 LanceDB Developers
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +13,23 @@
 #  limitations under the License.
 import sys
 
+
 import numpy as np
 import pyarrow as pa
+"""
+Embedding Tests
+
+Tests the with_embeddings() function and wrapping.
+
+Focuses on:
+
+- Passing embedding functions  
+- Adding vector column to tables
+- Wrapping configs
+"""
 from lancedb.embeddings import with_embeddings
 
 
-def mock_embed_func(input_data):
     return [np.random.randn(128).tolist() for _ in range(len(input_data))]
 
 
@@ -39,3 +51,4 @@ def test_with_embeddings():
         assert data.column_names == ["text", "price", "vector"]
         assert data.column("text").to_pylist() == ["foo", "bar"]
         assert data.column("price").to_pylist() == [10.0, 20.0]
+
